@@ -5,7 +5,7 @@ A drag-to-select box selection plugin for [Rete.js](https://retejs.org) v2.
 ## Install
 
 ```bash
-npm install @eviatar/rete-selection-plugin
+npm install rete-selection-plugin
 ```
 
 ## Peer Dependencies
