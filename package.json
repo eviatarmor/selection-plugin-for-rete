@@ -1,0 +1,18 @@
+{
+  "name": "selection-plugin-for-rete",
+  "version": "1.0.0",
+  "description": "Marquee selection plugin for Rete v2",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "types": "dist/index.d.types",
+  "peerDependencies": {
+    "rete": "^2.0.6",
+    "rete-area-plugin": "^2.1.5"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3",
+    "rete-cli": "^2.1.0"
+  }
+}
