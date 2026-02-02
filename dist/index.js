@@ -4,15 +4,16 @@ exports.ReteSelectionPlugin = void 0;
 const rete_1 = require("rete");
 const rete_area_plugin_1 = require("rete-area-plugin");
 class ReteSelectionPlugin extends rete_1.Scope {
-    constructor(style) {
-        var _a, _b, _c, _d;
+    constructor(selector) {
         super("selection");
-        this.selectedIds = new Set();
         this.style = {
-            backgroundColor: (_a = style === null || style === void 0 ? void 0 : style.backgroundColor) !== null && _a !== void 0 ? _a : "#4a90d9",
-            borderColor: (_c = (_b = style === null || style === void 0 ? void 0 : style.borderColor) !== null && _b !== void 0 ? _b : style === null || style === void 0 ? void 0 : style.backgroundColor) !== null && _c !== void 0 ? _c : "#4a90d9",
-            borderWidth: (_d = style === null || style === void 0 ? void 0 : style.borderWidth) !== null && _d !== void 0 ? _d : 2,
+            backgroundColor: "#4a90d9",
+            borderColor: "#4a90d9",
+            borderWidth: 2,
+            opacity: 30
         };
+        this.selectedIds = new Set();
+        this.selector = selector;
     }
     setParent(scope) {
         super.setParent(scope);
@@ -35,7 +36,7 @@ class ReteSelectionPlugin extends rete_1.Scope {
         this.box = document.createElement("div");
         this.box.style.cssText = `
                 position: absolute;
-                background: ${this.style.backgroundColor}26;
+                background: ${this.style.backgroundColor}${this.style.opacity};
                 border: ${this.style.borderWidth}px solid ${this.style.borderColor};
                 display: none;
               `;
@@ -43,9 +44,8 @@ class ReteSelectionPlugin extends rete_1.Scope {
     }
     setupSelection() {
         const container = this.area.container;
-        const selector = rete_area_plugin_1.AreaExtensions.selector();
         const accumulating = rete_area_plugin_1.AreaExtensions.accumulateOnCtrl();
-        const selectableNodes = rete_area_plugin_1.AreaExtensions.selectableNodes(this.area, selector, { accumulating });
+        const selectableNodes = rete_area_plugin_1.AreaExtensions.selectableNodes(this.area, this.selector, { accumulating });
         let origin = { x: 0, y: 0 };
         let active = false;
         const updateBox = (clientX, clientY) => {
@@ -151,6 +151,9 @@ class ReteSelectionPlugin extends rete_1.Scope {
             }
             return context;
         });
+    }
+    addPreset(preset) {
+        this.style = Object.assign({}, preset);
     }
 }
 exports.ReteSelectionPlugin = ReteSelectionPlugin;
