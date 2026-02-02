@@ -1,10 +1,11 @@
 import {ConnectionBase, GetSchemes, NodeBase, NodeEditor, Root, Scope,} from "rete";
 import {Area2D, AreaExtensions, AreaPlugin} from "rete-area-plugin";
 
-type SelectionStyle = {
+type SelectionPreset = {
     borderColor?: string;
     borderWidth: number;
     backgroundColor: string;
+    opacity: number;
 };
 
 type NodeScheme = NodeBase & {
@@ -20,19 +21,21 @@ export class ReteSelectionPlugin<Schemes extends ExpectedSchemes> extends Scope<
 > {
     editor!: NodeEditor<Schemes>;
     area!: AreaPlugin<Schemes, Area2D<Schemes>>;
-
-    private style!: SelectionStyle;
+    private selector: ReturnType<typeof AreaExtensions.selector>;
+    
+    private style: SelectionPreset = {
+        backgroundColor: "#4a90d9",
+        borderColor: "#4a90d9",
+        borderWidth: 2,
+        opacity: 30
+    };
     private selectedIds = new Set<string>();
     private overlay!: HTMLElement;
     private box!: HTMLElement;
 
-    constructor(style?: SelectionStyle) {
+    constructor(selector: ReturnType<typeof AreaExtensions.selector>) {
         super("selection");
-        this.style = {
-            backgroundColor: style?.backgroundColor ?? "#4a90d9",
-            borderColor: style?.borderColor ?? style?.backgroundColor ?? "#4a90d9",
-            borderWidth: style?.borderWidth ?? 2,
-        };
+        this.selector = selector;
     }
 
     setParent(scope: Scope<Area2D<Schemes>, [Root<Schemes>]>): void {
@@ -61,7 +64,7 @@ export class ReteSelectionPlugin<Schemes extends ExpectedSchemes> extends Scope<
         this.box = document.createElement("div");
         this.box.style.cssText = `
                 position: absolute;
-                background: ${this.style.backgroundColor}26;
+                background: ${this.style.backgroundColor}${this.style.opacity};
                 border: ${this.style.borderWidth}px solid ${this.style.borderColor};
                 display: none;
               `;
@@ -71,11 +74,10 @@ export class ReteSelectionPlugin<Schemes extends ExpectedSchemes> extends Scope<
     private setupSelection(): void {
         const container = this.area.container;
 
-        const selector = AreaExtensions.selector();
         const accumulating = AreaExtensions.accumulateOnCtrl();
         const selectableNodes = AreaExtensions.selectableNodes(
             this.area,
-            selector,
+            this.selector,
             {accumulating}
         );
 
@@ -220,5 +222,11 @@ export class ReteSelectionPlugin<Schemes extends ExpectedSchemes> extends Scope<
 
             return context;
         });
+    }
+
+    public addPreset(preset: SelectionPreset) {
+        this.style = {
+            ...preset
+        };
     }
 }

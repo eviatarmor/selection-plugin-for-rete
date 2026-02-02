@@ -37,7 +37,7 @@ type Schemes = GetSchemes<MyNode, ClassicPreset.Connection>;
 const editor = new NodeEditor<Schemes>();
 const area = new AreaPlugin<Schemes>(container);
 
-const selection = new ReteSelectionPlugin<Schemes>();
+const selection = new ReteSelectionPlugin<Schemes>(AreaExtensions.selector());
 
 editor.use(area);
 area.use(selection);
@@ -48,10 +48,11 @@ area.use(selection);
 All style options are optional. Defaults to a blue selection box.
 
 ```typescript
-const selection = new ReteSelectionPlugin<Schemes>({
-  backgroundColor: "#4a90d9", // fill colour (26% opacity applied automatically)
-  borderColor: "#4a90d9",     // border colour (defaults to backgroundColor if omitted)
-  borderWidth: 2              // border width in pixels
+selection.addPreset({
+  backgroundColor: "#4a90d9", 
+  borderColor: "#4a90d9",     
+  borderWidth: 2,             
+  opacity: 60
 });
 ```
 
